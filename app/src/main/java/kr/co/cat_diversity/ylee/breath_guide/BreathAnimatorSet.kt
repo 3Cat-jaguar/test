@@ -7,12 +7,10 @@ import kr.co.cat_diversity.ylee.breath_guide.AnimationUnit.propScaleX
 import kr.co.cat_diversity.ylee.breath_guide.AnimationUnit.propScaleY
 import kr.co.cat_diversity.ylee.breath_guide.AnimationUnit.propAlpha
 
-class BreathAnimatorSet(view : View) {
-
-    val repeatCount = 3
-    val inhalTime = 6000L
-    val pauseTime = 3000L
-    val exhalTime = 6000L
+class BreathAnimatorSet(view : View,
+                        inhalTime : Long,
+                        pauseTime : Long,
+                        exhalTime : Long) {
     val minSize = 0.5f
     val maxSize = 2f
     val minAlpha = 0.3f
@@ -58,5 +56,4 @@ class BreathAnimatorSet(view : View) {
 
         return animatorSet
     }
-
 }
