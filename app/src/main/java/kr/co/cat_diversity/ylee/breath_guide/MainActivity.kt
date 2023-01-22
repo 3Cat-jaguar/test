@@ -1,5 +1,6 @@
 package kr.co.cat_diversity.ylee.breath_guide
 
+import android.animation.AnimatorSet
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -11,13 +12,16 @@ import kr.co.cat_diversity.ylee.breath_guide.BreathUnit.repeatCount
 import kr.co.cat_diversity.ylee.breath_guide.BreathUnit.inhalTime
 import kr.co.cat_diversity.ylee.breath_guide.BreathUnit.pauseTime
 import kr.co.cat_diversity.ylee.breath_guide.BreathUnit.exhalTime
+import kr.co.cat_diversity.ylee.breath_guide.BreathUnit.totalSet
+import kr.co.cat_diversity.ylee.breath_guide.BreathUnit.waitTime
 
 import kr.co.cat_diversity.ylee.breath_guide.databinding.ActivityMainBinding
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val breathAnimatorSet by lazy { BreathAnimatorSet(binding.animImg, inhalTime, pauseTime, exhalTime) }
+    lateinit var breathAnimator : AnimatorSet
     private val viewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,38 +29,81 @@ class MainActivity : AppCompatActivity() {
 
         binding.noticeText.text = getString(R.string.blank)
         binding.noticeTime.text = getString(R.string.blank)
+        setNoticeBreath(0)
+        setNoticeSet(0)
         binding.animImg.setImageResource(R.drawable.circle)
-        val breathAnimator = breathAnimatorSet.getBreathAnimatorSet()
-        var repeatCount = repeatCount
+
+        breathAnimator = BreathAnimatorSet(binding.animImg, inhalTime, pauseTime, exhalTime).getBreathAnimatorSet()
         breathAnimator.doOnEnd {
-            repeatCount--
-            if (repeatCount > 0) {
-                breathAnimator.start()
-            } else {
-                binding.startBtn.text = getString(R.string.anim_start)
-                return@doOnEnd
-            }
+            viewModel.addCurBreath()
         }
         breathAnimator.doOnStart {
             startInhalCountdown()
         }
+
         binding.startBtn.setOnClickListener {
             if ((it as Button).text == getString(R.string.anim_start)){
                 binding.startBtn.text = getString(R.string.anim_proceed)
-                breathAnimator.start()
+                viewModel.setCurSet(1)
             } else {
                 return@setOnClickListener
+            }
+        }
+
+        viewModel.curBreath.observe(this) {
+            Timber.d("curBreath observed $it")
+            setNoticeBreath(it)
+            if (it <= repeatCount) {
+                breathAnimator.start()
+            } else {
+                setNoticeBreath(repeatCount)
+                viewModel.addCurSet()
+            }
+        }
+
+        viewModel.curSet.observe(this) {
+            Timber.d("curSet observed $it")
+            setNoticeSet(it)
+            when (it) {
+                1 -> viewModel.setCurBreath(1)
+                in 2..totalSet -> startWaitCountdown(viewModel.curSet.value?:1)
+                else -> {
+                    binding.startBtn.text = getString(R.string.anim_start)
+                    binding.noticeText.text = "모두 종료되었습니다."
+                    binding.noticeTime.text = ""
+                    setNoticeBreath(0)
+                    setNoticeSet(0)
+                }
             }
         }
 
         setContentView(binding.root)
     }
 
-    override fun onResume() {
-        super.onResume()
-//        viewModel.leftTime.observe(this) {
-//
-//        }
+    private fun setNoticeBreath(curBreath : Int) {
+        binding.noticeBreath.text = "$curBreath ${getString(R.string.breath_count)} / $repeatCount ${getString(R.string.breath_count)}"
+    }
+
+    private fun setNoticeSet(curSet: Int) {
+        binding.noticeSet.text = "$curSet ${getString(R.string.breath_set)} / $totalSet ${getString(R.string.breath_set)}"
+    }
+
+    private fun startWaitCountdown(curSet : Int) {
+        if (curSet == totalSet) {
+            Timber.d("$curSet / $totalSet")
+        }
+        var count = waitTime/1000
+        binding.noticeText.text = "잠시 휴식합니다"
+        object : CountDownTimer(waitTime, 1000L) {
+            override fun onTick(leftTime: Long) {
+                binding.noticeTime.text = "" + count
+                count--
+            }
+
+            override fun onFinish() {
+                viewModel.setCurBreath(1)
+            }
+        }.start()
     }
 
     private fun startInhalCountdown() {
@@ -99,8 +146,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                binding.noticeText.text = ""
-                binding.noticeTime.text = ""
+                Timber.d("호흡끝")
             }
         }.start()
     }
