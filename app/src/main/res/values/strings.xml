@@ -3,4 +3,7 @@
     <string name="blank"></string>
     <string name="anim_start">시작</string>
     <string name="anim_proceed">진행중</string>
+    <string name="anim_time">초</string>
+    <string name="breath_set">세트</string>
+    <string name="breath_count">회</string>
 </resources>
