@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         app:layout_constraintHeight_percent="0.3"
         app:layout_constraintTop_toTopOf="parent"
-        android:padding="10dp"
+        android:padding="20dp"
         >
         <TextView
             android:id="@+id/notice_set"
@@ -21,6 +21,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:text="1세트/2세트"
+            android:textSize="20sp"
+            android:textColor="@color/black"
             />
         <TextView
             android:id="@+id/notice_breath"
@@ -29,6 +31,8 @@
             app:layout_constraintTop_toBottomOf="@id/notice_set"
             app:layout_constraintStart_toStartOf="parent"
             android:text="1회/15회"
+            android:textSize="20sp"
+            android:textColor="@color/black"
             />
         <TextView
             android:id="@+id/notice_text"
@@ -37,7 +41,7 @@
             app:layout_constraintBottom_toTopOf="@id/notice_time"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:textSize="20sp"
+            android:textSize="36sp"
             android:textColor="@color/black"
             android:text="설명이 들어갑니다"
             />
@@ -48,7 +52,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:textSize="16sp"
+            android:textSize="32sp"
             android:textColor="@color/black"
             android:text="5"
             />
