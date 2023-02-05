@@ -66,7 +66,10 @@ class MainActivity : AppCompatActivity() {
             setNoticeSet(it)
             when (it) {
                 1 -> viewModel.setCurBreath(1)
-                in 2..totalSet -> startWaitCountdown(viewModel.curSet.value?:1)
+                in 2..totalSet -> {
+                    binding.noticeBreath.text = "1 ${getString(R.string.breath_count)} / 1 ${getString(R.string.breath_count)}"
+                    startWaitCountdown(viewModel.curSet.value?:1)
+                }
                 else -> {
                     binding.startBtn.text = getString(R.string.anim_start)
                     binding.noticeText.text = "모두 종료되었습니다."
