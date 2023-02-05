@@ -4,6 +4,7 @@ import android.animation.AnimatorSet
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.view.View
 import android.widget.Button
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -43,6 +44,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.startBtn.setOnClickListener {
             if ((it as Button).text == getString(R.string.anim_start)){
+                binding.animImg.visibility = View.VISIBLE
+                binding.animCloseNotice.visibility = View.GONE
                 binding.startBtn.text = getString(R.string.anim_proceed)
                 viewModel.setCurSet(1)
             } else {
@@ -74,6 +77,8 @@ class MainActivity : AppCompatActivity() {
                     binding.startBtn.text = getString(R.string.anim_start)
                     binding.noticeText.text = "모두 종료되었습니다."
                     binding.noticeTime.text = ""
+                    binding.animImg.visibility = View.GONE
+                    binding.animCloseNotice.visibility = View.VISIBLE
                     setNoticeBreath(0)
                     setNoticeSet(0)
                 }

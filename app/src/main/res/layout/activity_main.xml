@@ -10,7 +10,7 @@
         android:id="@+id/notice_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintHeight_percent="0.4"
         app:layout_constraintTop_toTopOf="parent"
         android:padding="20dp"
         >
@@ -62,7 +62,7 @@
         android:id="@+id/anim_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintHeight_percent="0.4"
         app:layout_constraintTop_toBottomOf="@id/notice_container"
         android:padding="10dp"
         >
@@ -76,6 +76,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <TextView
+            android:id="@+id/anim_close_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="40sp"
+            android:textColor="@color/black"
+            android:text="수고하셨습니다"
+            android:visibility="gone"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
