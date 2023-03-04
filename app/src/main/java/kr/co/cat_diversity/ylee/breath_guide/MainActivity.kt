@@ -22,8 +22,8 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    lateinit var breathAnimator : AnimatorSet
-    private val viewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
+    private lateinit var breathAnimator : AnimatorSet
+    private val viewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         binding.noticeTime.text = getString(R.string.blank)
         setNoticeBreath(0)
         setNoticeSet(0)
-        binding.animImg.setImageResource(R.drawable.circle)
+        binding.animImg.setImageResource(R.drawable.blue_circle)
 
         breathAnimator = BreathAnimatorSet(binding.animImg, inhalTime, pauseTime, exhalTime).getBreathAnimatorSet()
         breathAnimator.doOnEnd {
@@ -79,8 +79,12 @@ class MainActivity : AppCompatActivity() {
                     binding.noticeTime.text = ""
                     binding.animImg.visibility = View.GONE
                     binding.animCloseNotice.visibility = View.VISIBLE
-                    setNoticeBreath(0)
-                    setNoticeSet(0)
+
+                    binding.noticeSet.text = "$totalSet ${getString(R.string.breath_set)} / $totalSet ${getString(R.string.breath_set)}"
+                    binding.noticeBreath.text = "$repeatCount ${getString(R.string.breath_count)} / $repeatCount ${getString(R.string.breath_count)}"
+
+//                    setNoticeBreath(0)
+//                    setNoticeSet(0)
                 }
             }
         }
@@ -104,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         binding.noticeText.text = "잠시 휴식합니다"
         object : CountDownTimer(waitTime, 1000L) {
             override fun onTick(leftTime: Long) {
-                binding.noticeTime.text = "" + count
+                binding.noticeTime.text = count.toString()
                 count--
             }
 
@@ -116,10 +120,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun startInhalCountdown() {
         var count = inhalTime/1000
+        binding.animImg.setImageResource(R.drawable.blue_circle)
         binding.noticeText.text = "천천히 숨을 마십니다"
         object : CountDownTimer(inhalTime, 1000L) {
             override fun onTick(leftTime: Long) {
-                binding.noticeTime.text = "" + count
+                binding.noticeTime.text = count.toString()
                 count--
             }
 
@@ -131,10 +136,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun startPauseCountdown() {
         var count = pauseTime/1000
+        binding.animImg.setImageResource(R.drawable.yellow_circle)
         binding.noticeText.text = "잠시 숨을 멈춥니다"
         object : CountDownTimer(pauseTime, 1000L) {
             override fun onTick(leftTime: Long) {
-                binding.noticeTime.text = "" + count
+                binding.noticeTime.text = count.toString()
                 count--
             }
 
@@ -146,10 +152,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun startExhalCountdown() {
         var count = exhalTime/1000
+        binding.animImg.setImageResource(R.drawable.red_circle)
         binding.noticeText.text = "천천히 숨을 내쉽니다"
         object : CountDownTimer(exhalTime, 1000L) {
             override fun onTick(leftTime: Long) {
-                binding.noticeTime.text = "" + count
+                binding.noticeTime.text = count.toString()
                 count--
             }
 
